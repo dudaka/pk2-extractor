@@ -54,16 +54,16 @@ python pk2_extractor.py path/to/file.pk2
 
 ### Commands in Interactive Mode
 
-| Command | Description |
-|---------|-------------|
-| `<number>` | Navigate to folder or select file |
-| `0` | Go to parent folder |
-| `e <num>` | Extract file/folder at index |
-| `ea` | Extract all contents of current folder |
-| `t` | Show tree view of current folder |
-| `s <query>` | Search for files matching query |
-| `f` | **Filter & extract by pattern** (extension, glob, regex, substring) |
-| `q` | Quit |
+| Command     | Description                                                         |
+| ----------- | ------------------------------------------------------------------- |
+| `<number>`  | Navigate to folder or select file                                   |
+| `0`         | Go to parent folder                                                 |
+| `e <num>`   | Extract file/folder at index                                        |
+| `ea`        | Extract all contents of current folder                              |
+| `t`         | Show tree view of current folder                                    |
+| `s <query>` | Search for files matching query                                     |
+| `f`         | **Filter & extract by pattern** (extension, glob, regex, substring) |
+| `q`         | Quit                                                                |
 
 ### Filter & Extract (f command)
 
@@ -91,11 +91,13 @@ Output directory [./extracted]:
 ### Command-Line Mode
 
 **Extract entire archive:**
+
 ```bash
 python pk2_extractor.py file.pk2 -e ./output_directory
 ```
 
 **Extract with pattern filters:**
+
 ```bash
 # By file extension
 python pk2_extractor.py file.pk2 -e ./output --ext .txt .ddj
@@ -114,6 +116,7 @@ python pk2_extractor.py file.pk2 -e ./output --contains CONFIG -i
 ```
 
 **List archive contents:**
+
 ```bash
 python pk2_extractor.py file.pk2 -l
 
@@ -124,26 +127,26 @@ python pk2_extractor.py file.pk2 -l --contains config
 
 ### Command-Line Options
 
-| Option | Description |
-|--------|-------------|
-| `-e`, `--extract` | Output directory for extraction |
-| `-l`, `--list` | List contents only (no extraction) |
-| `-p`, `--pattern` | Regex pattern to match file paths |
-| `--ext` | File extensions (e.g., `.txt .ddj`) |
-| `--contains` | Substring to match in file path |
-| `--glob` | Glob pattern (e.g., `*.txt`, `icon_*`) |
-| `-i`, `--ignore-case` | Case-insensitive matching |
+| Option                | Description                            |
+| --------------------- | -------------------------------------- |
+| `-e`, `--extract`     | Output directory for extraction        |
+| `-l`, `--list`        | List contents only (no extraction)     |
+| `-p`, `--pattern`     | Regex pattern to match file paths      |
+| `--ext`               | File extensions (e.g., `.txt .ddj`)    |
+| `--contains`          | Substring to match in file path        |
+| `--glob`              | Glob pattern (e.g., `*.txt`, `icon_*`) |
+| `-i`, `--ignore-case` | Case-insensitive matching              |
 
 ## Test Results
 
 Tested with Media.pk2 (~990 MB):
 
-| Metric | Value |
-|--------|-------|
-| Total entries | 30,764 |
-| Files | 30,591 |
-| Folders | 168 |
-| Parsing time | ~2 seconds |
+| Metric        | Value      |
+| ------------- | ---------- |
+| Total entries | 30,764     |
+| Files         | 30,591     |
+| Folders       | 168        |
+| Parsing time  | ~2 seconds |
 
 ## Screenshots
 
@@ -197,6 +200,7 @@ When extracting files, the original folder structure from the PK2 archive is pre
 ```
 
 This applies to all extraction methods:
+
 - Single file extraction (`e <num>`)
 - Folder extraction (`e <num>` on a folder)
 - Extract all (`ea`)
@@ -224,6 +228,28 @@ This applies to all extraction methods:
 - Uses iterative stack-based approach (avoids Python recursion limit)
 - Tracks visited positions to prevent infinite loops
 - Safety limit of 500,000 entries maximum
+
+### Others
+
+```bash
+python pk2_extractor.py ./data/Media.pk2 -e ./output --glob "characterdata_*.txt"
+python pk2_extractor.py ./data/Media.pk2 -e ./output --glob "textdata_equip&skill_*.txt"
+python pk2_extractor.py ./data/Media.pk2 -e ./output --glob "textdata_object_*.txt"
+python pk2_extractor.py ./data/Media.pk2 -e ./output --glob "textzonename_*.txt"
+python pk2_extractor.py ./data/Media.pk2 -e ./output --contains "npcpos"
+python pk2_extractor.py ./data/Media.pk2 -e ./output --contains "teleportdata"
+python pk2_extractor.py ./data/Media.pk2 -e ./output --contains "teleportbuilding"
+python pk2_extractor.py ./data/Media.pk2 -e ./output --contains "teleportlink"
+```
+
+Merge mutiple text files in to one
+
+```bash
+ls characterdata_*.txt | sort -V | xargs cat > characterdata_all.txt
+ls "textdata_equip&skill"_*.txt | sort -V | xargs cat > "textdata_equip&skill"_all.txt
+ls textdata_object_*.txt | sort -V | xargs cat > textdata_object_all.txt
+ls textzonename_*.txt | sort -V | xargs cat > textzonename_all.txt
+```
 
 ## License
 
